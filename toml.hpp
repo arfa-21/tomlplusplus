@@ -96,7 +96,7 @@
 #endif
 
 #ifndef TOML_MAKE_VERSION
-#define TOML_MAKE_VERSION(major, minor, patch) (((major)*10000) + ((minor)*100) + ((patch)))
+#define TOML_MAKE_VERSION(major, minor, patch) (((major) * 10000) + ((minor) * 100) + ((patch)))
 #endif
 
 #ifndef TOML_INTELLISENSE
@@ -461,7 +461,7 @@
 #define TOML_ABSTRACT_INTERFACE TOML_DECLSPEC(novtable)
 #endif
 #ifndef TOML_EMPTY_BASES
-#define TOML_EMPTY_BASES		TOML_DECLSPEC(empty_bases)
+#define TOML_EMPTY_BASES TOML_DECLSPEC(empty_bases)
 #endif
 
 // TOML_TRIVIAL_ABI
@@ -1140,12 +1140,12 @@ TOML_ENABLE_WARNINGS;
 
 #ifndef TOML_DISABLE_NOEXCEPT_NOEXCEPT
 #define TOML_DISABLE_NOEXCEPT_NOEXCEPT 0
-	#ifdef _MSC_VER
-		#if _MSC_VER <= 1943 // Up to Visual Studio 2022 Version 17.13.6
-		#undef TOML_DISABLE_NOEXCEPT_NOEXCEPT
-		#define TOML_DISABLE_NOEXCEPT_NOEXCEPT 1
-		#endif
-	#endif
+#ifdef _MSC_VER
+#if _MSC_VER <= 1943 // Up to Visual Studio 2022 Version 17.13.6
+#undef TOML_DISABLE_NOEXCEPT_NOEXCEPT
+#define TOML_DISABLE_NOEXCEPT_NOEXCEPT 1
+#endif
+#endif
 #endif
 
 #if !defined(TOML_FLOAT_CHARCONV) && (TOML_GCC || TOML_CLANG || (TOML_ICC && !TOML_ICC_CL))
@@ -2368,7 +2368,7 @@ TOML_IMPL_NAMESPACE_START
 	template <typename Iterator, typename T>
 	TOML_PURE_GETTER
 	inline auto find(Iterator start, Iterator end, const T& needle) noexcept //
-		->decltype(&(*start))
+		-> decltype(&(*start))
 	{
 		for (; start != end; start++)
 			if (*start == needle)
@@ -6051,7 +6051,8 @@ TOML_IMPL_NAMESPACE_START
 			}
 
 			return static_cast<T&&>(val).visit(
-				[flags](auto&& concrete) {
+				[flags](auto&& concrete)
+				{
 					return static_cast<toml::node*>(
 						make_node_impl_specialized(static_cast<decltype(concrete)&&>(concrete), flags));
 				});
@@ -8507,7 +8508,7 @@ TOML_NAMESPACE_START
 				static constexpr auto moving_node_ptr = std::is_same_v<value_type, impl::node_ptr> //
 													 && sizeof...(ValueArgs) == 1u				   //
 													 && impl::first_is_same<impl::node_ptr&&, ValueArgs&&...>;
-				using unwrapped_type = impl::remove_cvref<impl::unwrap_node<value_type>>;
+				using unwrapped_type				  = impl::remove_cvref<impl::unwrap_node<value_type>>;
 
 				static_assert(moving_node_ptr										//
 								  || impl::is_native<unwrapped_type>				//
@@ -12048,7 +12049,7 @@ TOML_NAMESPACE_START
 	}
 
 	TOML_EXTERNAL_LINKAGE
-	void array::flatten_child(array && child, size_t & dest_index) noexcept
+	void array::flatten_child(array && child, size_t& dest_index) noexcept
 	{
 		for (size_t i = 0, e = child.size(); i < e; i++)
 		{
@@ -12065,7 +12066,7 @@ TOML_NAMESPACE_START
 	}
 
 	TOML_EXTERNAL_LINKAGE
-	array& array::flatten()&
+	array& array::flatten() &
 	{
 		if (elems_.empty())
 			return *this;
@@ -12114,7 +12115,7 @@ TOML_NAMESPACE_START
 	}
 
 	TOML_EXTERNAL_LINKAGE
-	array& array::prune(bool recursive)& noexcept
+	array& array::prune(bool recursive) & noexcept
 	{
 		if (elems_.empty())
 			return *this;
@@ -12167,9 +12168,9 @@ TOML_NAMESPACE_START
 			if (lhs_type != rhs_type)
 				return false;
 
-			const bool equal = lhs.elems_[i]->visit(
-				[&](const auto& lhs_) noexcept
-				{ return lhs_ == *static_cast<std::remove_reference_t<decltype(lhs_)>*>(&rhs_); });
+			const bool equal =
+				lhs.elems_[i]->visit([&](const auto& lhs_) noexcept
+									 { return lhs_ == *static_cast<std::remove_reference_t<decltype(lhs_)>*>(&rhs_); });
 			if (!equal)
 				return false;
 		}
@@ -12422,7 +12423,7 @@ TOML_NAMESPACE_START
 	}
 
 	TOML_EXTERNAL_LINKAGE
-	table& table::prune(bool recursive)& noexcept
+	table& table::prune(bool recursive) & noexcept
 	{
 		if (map_.empty())
 			return *this;
@@ -12489,9 +12490,9 @@ TOML_NAMESPACE_START
 			if (lhs_type != rhs_type)
 				return false;
 
-			const bool equal = l->second->visit(
-				[&](const auto& lhs_) noexcept
-				{ return lhs_ == *static_cast<std::remove_reference_t<decltype(lhs_)>*>(&rhs_); });
+			const bool equal =
+				l->second->visit([&](const auto& lhs_) noexcept
+								 { return lhs_ == *static_cast<std::remove_reference_t<decltype(lhs_)>*>(&rhs_); });
 			if (!equal)
 				return false;
 		}
@@ -12774,7 +12775,8 @@ TOML_ANON_NAMESPACE_START
 			return value;
 		}
 	};
-	static_assert(std::is_trivially_default_constructible_v<utf8_codepoint> && std::is_trivially_copyable_v<utf8_codepoint>);
+	static_assert(std::is_trivially_default_constructible_v<utf8_codepoint>
+				  && std::is_trivially_copyable_v<utf8_codepoint>);
 	static_assert(std::is_standard_layout_v<utf8_codepoint>);
 
 	struct TOML_ABSTRACT_INTERFACE utf8_reader_interface
@@ -12805,6 +12807,7 @@ TOML_ANON_NAMESPACE_START
 #else
 #define utf8_reader_error(...)				err_.emplace(__VA_ARGS__)
 #define utf8_reader_return_after_error(...) return __VA_ARGS__
+	// clang-format off
 #define utf8_reader_error_check(...)                                                                                   \
 	do                                                                                                                 \
 	{                                                                                                                  \
@@ -12812,6 +12815,7 @@ TOML_ANON_NAMESPACE_START
 			return __VA_ARGS__;                                                                                        \
 	}                                                                                                                  \
 	while (false)
+	// clang-format on
 
 #endif
 
@@ -13074,6 +13078,7 @@ TOML_ANON_NAMESPACE_START
 #if TOML_EXCEPTIONS
 #define utf8_buffered_reader_error_check(...) static_assert(true)
 #else
+	// clang-format off
 #define utf8_buffered_reader_error_check(...)                                                                          \
 	do                                                                                                                 \
 	{                                                                                                                  \
@@ -13081,6 +13086,7 @@ TOML_ANON_NAMESPACE_START
 			return __VA_ARGS__;                                                                                        \
 	}                                                                                                                  \
 	while (false)
+	// clang-format on
 
 #endif
 
@@ -13551,6 +13557,7 @@ TOML_ANON_NAMESPACE_END;
 
 #define is_eof()		 !cp
 #define assert_not_eof() TOML_ASSERT_ASSUME(cp != nullptr)
+// clang-format off
 #define return_if_eof(...)                                                                                             \
 	do                                                                                                                 \
 	{                                                                                                                  \
@@ -13558,6 +13565,7 @@ TOML_ANON_NAMESPACE_END;
 			return __VA_ARGS__;                                                                                        \
 	}                                                                                                                  \
 	while (false)
+// clang-format on
 
 #if TOML_EXCEPTIONS
 #define is_error()					false
@@ -13569,6 +13577,7 @@ TOML_ANON_NAMESPACE_END;
 #define is_error()				!!err
 #define return_after_error(...) return __VA_ARGS__
 #define assert_not_error()		TOML_ASSERT(!is_error())
+// clang-format off
 #define return_if_error(...)                                                                                           \
 	do                                                                                                                 \
 	{                                                                                                                  \
@@ -13583,6 +13592,7 @@ TOML_ANON_NAMESPACE_END;
 			return __VA_ARGS__;                                                                                        \
 	}                                                                                                                  \
 	while (false)
+// clang-format on
 #endif
 
 #if defined(TOML_BREAK_AT_PARSE_ERRORS) && TOML_BREAK_AT_PARSE_ERRORS
@@ -13615,6 +13625,7 @@ TOML_ANON_NAMESPACE_END;
 
 #define set_error_and_return_default(...) set_error_and_return({}, __VA_ARGS__)
 
+// clang-format off
 #define set_error_and_return_if_eof(...)                                                                               \
 	do                                                                                                                 \
 	{                                                                                                                  \
@@ -13622,6 +13633,7 @@ TOML_ANON_NAMESPACE_END;
 			set_error_and_return(__VA_ARGS__, "encountered end-of-file"sv);                                            \
 	}                                                                                                                  \
 	while (false)
+// clang-format on
 
 #define advance_and_return_if_error(...)                                                                               \
 	do                                                                                                                 \
@@ -17224,10 +17236,10 @@ TOML_NAMESPACE_START
 
 		const auto original_indent = indent();
 		const auto multiline	   = force_multiline_arrays()
-							|| TOML_ANON_NAMESPACE::toml_formatter_forces_multiline(
-								   arr,
-								   120u,
-								   indent_columns() * static_cast<size_t>(original_indent < 0 ? 0 : original_indent));
+								  || TOML_ANON_NAMESPACE::toml_formatter_forces_multiline(
+										 arr,
+										 120u,
+										 indent_columns() * static_cast<size_t>(original_indent < 0 ? 0 : original_indent));
 
 		print_unformatted("["sv);
 
